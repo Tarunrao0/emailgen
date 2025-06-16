@@ -3,19 +3,22 @@ from bs4 import BeautifulSoup
 import json
 import re
 import html.entities
+from urllib.parse import urlparse
 
 
-def extract_crunchbase_info(html_content):
+def extract_crunchbase_info(html_content, company_name="Unknown"):
     """
     Extracts structured company data from Crunchbase HTML content.
 
     Args:
         html_content (str): Raw HTML from Crunchbase page
+        company_name (str): Name of the company, derived from URL
 
     Returns:
         dict: Structured company information with cleaned values
     """
     result = {
+        "company_name": company_name,
         "description": None,
         "company_overview": None,
         "headquarters_location": None,
@@ -69,7 +72,6 @@ def extract_crunchbase_info(html_content):
         ]
             
     # News Section
-        # News Section (from HTML)
     news_items = []
     news_divs = soup.select("section-card h2.section-title")
     for h2 in news_divs:
@@ -93,28 +95,14 @@ def extract_crunchbase_info(html_content):
                         "title": title,
                         "url": url
                     })
-            break  # No need to look further once we find the news section
+            break
 
     result["news"] = news_items
-
-
     return clean_string_values(result)
 
 
 def clean_string_values(data):
-    """
-    Recursively cleans string values by handling:
-    - Escaped characters
-    - Unicode sequences
-    - HTML entities
-    - Whitespace normalization
-
-    Args:
-        data: Input data structure (dict, list, or str)
-
-    Returns:
-        Cleaned data structure
-    """
+    """Cleans string values recursively"""
     if isinstance(data, dict):
         return {k: clean_string_values(v) for k, v in data.items()}
     if isinstance(data, list):
@@ -144,33 +132,37 @@ def fetch_crunchbase_data(url):
     Returns:
         dict: Structured company data
     """
+    parsed = urlparse(url)
+    path_parts = parsed.path.strip("/").split("/")
+    company_name = path_parts[-1] if path_parts else "Unknown"
+
     with SB(uc=True, headless=False, locale="en") as browser:
         browser.open(url)
         browser.wait_for_ready_state_complete()
         browser.wait_for_element_present('script[id="ng-state"]', timeout=20)
 
-        # Handle cookie consent if present
+        # Handle cookie consent
         browser.click_if_visible("#onetrust-accept-btn-handler", timeout=5)
-        browser.sleep(2)  # Allow dynamic content to load
+        browser.sleep(2)
 
-        return extract_crunchbase_info(browser.get_page_source())
+        return extract_crunchbase_info(browser.get_page_source(), company_name)
 
 
 def main():
-    """Entry point with error handling and output"""
+    """Entry point"""
     target_url = "https://www.crunchbase.com/organization/airbnb"
 
     try:
         print(f"🔄 Fetching data from: {target_url}")
         company_data = fetch_crunchbase_data(target_url)
 
-        # Save as JSON
+        # Save to JSON
         with open("company_data.json", "w", encoding="utf-8") as f:
             json.dump(company_data, f, indent=2, ensure_ascii=False)
 
-        print("✅ Data successfully retrieved")
+        print(f"✅ Data saved to company_data.json with name: {company_data.get('company_name')}")
     except Exception as e:
-        print(f"❌ Error processing {target_url}: {str(e)}")
+        print(f"❌ Error: {e}")
         return 1
 
     return 0

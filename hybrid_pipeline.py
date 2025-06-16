@@ -2,9 +2,9 @@ import json
 from groq import Groq  # Requires `pip install groq`
 from prompt_template import get_template
 from retrieve_email import extract_company_text, retrieve_similar_email
+import os
 
-# 🔑 Set your key or load from env
-client = Groq(api_key="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")  # Replace with your Groq key (or use os.getenv)
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 def generate_email(company_data_path: str, embeddings_path: str):
     with open(company_data_path, "r", encoding="utf-8") as f:
@@ -14,10 +14,8 @@ def generate_email(company_data_path: str, embeddings_path: str):
     source_text = extract_company_text(company_data)
     similar_email = retrieve_similar_email(source_text, embeddings_path)
 
-    # Create a template-focused prompt
     company_name = company_data.get("company_name", "Unknown")
-    
-    # Modified system prompt to emphasize template adherence
+
     system_prompt = """You are an expert email writer. Your task is to adapt the PROVIDED TEMPLATE EMAIL to fit a new company while maintaining the EXACT SAME structure, tone, and format.
 
 CRITICAL INSTRUCTIONS:
@@ -33,11 +31,9 @@ CRITICAL INSTRUCTIONS:
    - "Would you be up for a conversation next week?"
    - "I'd love to connect more and discuss [topic]. Would you be free next week?"
    - "I'd love to hear more about [company/topic] if you are available for a quick chat"
-   - Make it personal, enthusiastic, and suggest a specific timeframe
 9. Do NOT include "Best regards" or formal signatures
 10. Output ONLY the subject line and email content - no explanations or notes"""
 
-    # Template-focused user prompt
     user_prompt = f"""COMPANY TO TARGET: {company_name}
 
 COMPANY INFORMATION:
@@ -64,24 +60,28 @@ Subject: [your subject line]
 
 [email content only - no explanations]"""
 
-    # LLM call to Groq API with template-focused approach
     response = client.chat.completions.create(
         model="llama3-70b-8192",
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt}
         ],
-        temperature=0.4,  # Slightly higher for variety on regeneration
-        top_p=0.9  # Add some randomness for different outputs
+        temperature=0.4,
+        top_p=0.9
     )
 
     result = response.choices[0].message.content.strip()
-    
-    # Save the result without template comparison
+
     with open("final_email.txt", "w", encoding="utf-8") as f:
         f.write(result)
 
     print("✅ Generated email saved to final_email.txt")
+
+    return {
+        "company": company_name,
+        "subject": result.splitlines()[0].replace("Subject: ", "").strip(),
+        "email": "\n".join(result.splitlines()[1:]).strip()
+    }
 
 if __name__ == "__main__":
     generate_email("company_data.json", "email_embeddings.json")

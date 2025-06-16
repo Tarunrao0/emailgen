@@ -38,5 +38,5 @@ def scrape_company_info(company_name: str) -> dict:
         print(f"✅ Completed in {time.time() - start:.2f}s")
 
 if __name__ == "__main__":
-    data = scrape_company_info("labscompanies")
+    data = scrape_company_info("american armed forces mutual aid association")
     print(json.dumps(data, indent=2, ensure_ascii=False))

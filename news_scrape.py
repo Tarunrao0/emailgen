@@ -41,7 +41,7 @@ def update_json_with_summaries(json_path="company_data.json"):
         return
 
     summary = summarize_articles(news_entries)
-    data['news'] = summary  # store in a new field
+    data['news_summary'] = summary  # store in a new field
 
     with open(json_path, 'w', encoding='utf-8') as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
