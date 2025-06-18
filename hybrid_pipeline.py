@@ -3,6 +3,9 @@ from groq import Groq  # Requires `pip install groq`
 from prompt_template import get_template
 from retrieve_email import extract_company_text, retrieve_similar_email
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 client = Groq(api_key="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")
 
@@ -42,7 +45,7 @@ COMPANY INFORMATION:
 TEMPLATE EMAIL TO ADAPT:
 {similar_email}
 
-TASK: Adapt the template email above to target {company_name}. 
+TASK: Adapt the template email above to target {company_name}.
 - Keep the EXACT same structure and format
 - Replace company-specific details with relevant information about {company_name}
 - Maintain the same tone and personal style
