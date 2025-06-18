@@ -4,7 +4,7 @@ from prompt_template import get_template
 from retrieve_email import extract_company_text, retrieve_similar_email
 import os
 
-client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+client = Groq(api_key="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")
 
 def generate_email(company_data_path: str, embeddings_path: str):
     with open(company_data_path, "r", encoding="utf-8") as f:

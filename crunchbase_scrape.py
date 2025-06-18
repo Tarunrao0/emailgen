@@ -136,7 +136,7 @@ def fetch_crunchbase_data(url):
     path_parts = parsed.path.strip("/").split("/")
     company_name = path_parts[-1] if path_parts else "Unknown"
 
-    with SB(uc=True, headless=False, locale="en") as browser:
+    with SB(uc=True, headless=True, locale="en") as browser:
         browser.open(url)
         browser.wait_for_ready_state_complete()
         browser.wait_for_element_present('script[id="ng-state"]', timeout=20)

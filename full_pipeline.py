@@ -33,6 +33,7 @@ def scrape_company_info(company_name: str) -> dict:
 
     try:
         data = fetch_crunchbase_data(crunchbase_url)
+        # print(data)
         with open(JSON_FILE, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
 

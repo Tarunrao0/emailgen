@@ -89,7 +89,7 @@ def scrape_crunchbase_founder_info(name):
     education, jobs = [], []
 
     try:
-        with SB(uc=True, headless=False, locale="en") as browser:
+        with SB(uc=True, headless=True, locale="en") as browser:
             browser.open(url)
             browser.wait_for_ready_state_complete()
             browser.click_if_visible("#onetrust-accept-btn-handler", timeout=5)

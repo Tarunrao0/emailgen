@@ -1,30 +1,116 @@
 {
-  "company_name": "blum-b1c3",
-  "description": "Camelot operates as a decentralized exchange platform.",
-  "company_overview": "Blum offers a decentralized crypto trading platform built within a Telegram mini-app and a standalone app. The company enables multichain token trading across centralized and decentralized exchanges using tools like a trading terminal, Memepad, and AI-driven bots. It also facilitates token launches and manages live operations for its native $BLUM utility token. The platform provides digital tools for real-time market interaction, token farming mechanics, and integration within the TON ecosystem.",
-  "headquarters_location": "Dubai, United Arab Emirates, Asia",
-  "founder_names": [],
-  "industry_categories": [],
+  "company_name": "ramp-financial",
+  "description": "Policygenius is an online insurance tech company that specializes in providing life, home, and auto insurance.",
+  "company_overview": "Ramp provides a unified finance operations platform that includes corporate cards, expense tracking, bill payments, vendor and procurement workflows, travel management, and automated accounting. The platform embeds policy controls, approval workflows, and realâtime alerts to manage spending proactively, helping finance teams reduce manual tasks and improve visibility. It integrates with ERP and HRIS systems, syncs transactions reliably, and supports global operations across multiple currencies. Leveraging AI, Ramp automates expense submission, invoice processing, data coding, and costâsaving insights. Businesses report accelerated monthâend closing, fewer errors, and more transparent spending with the platform.",
+  "headquarters_location": "New York, United States, North America",
+  "founder_names": [
+    "Eric Glyman",
+    "Gene Lee",
+    "Karim Atiyeh"
+  ],
+  "industry_categories": [
+    "Financial Services",
+    "FinTech",
+    "Software"
+  ],
   "news": [
     {
-      "date": "Jun 10, 2025",
-      "source": "PRLog",
-      "title": "Blum aims to redefine Value and Innovation in Indian Furniture Fittings",
-      "url": "https://www.prlog.org/13081350-blum-aims-to-redefine-value-and-innovation-in-indian-furniture-fittings.html"
+      "date": "Jun 17, 2025",
+      "source": "BNN Bloomberg",
+      "title": "Fintech Ramp valued at US$16 billion in late-stage funding round",
+      "url": "https://www.bnnbloomberg.ca/business/company-news/2025/06/17/fintech-ramp-valued-at-us16-billion-in-late-stage-funding-round/"
     },
     {
-      "date": "Jun 2, 2025",
-      "source": "Plum",
-      "title": "Plum Wins Gold at the 5th Annual 2025 GlobeeÂ® Awards for Disruptors",
-      "url": "https://www.globenewswire.com/news-release/2025/06/02/3091721/0/en/Plum-Wins-Gold-at-the-5th-Annual-2025-Globee-Awards-for-Disruptors.html"
+      "date": "Jun 17, 2025",
+      "source": "Financial IT",
+      "title": "Ramp Raises $200M Series E at $16B Valuation as Companies of All Sizes Choose AI-Powered Finance Platform",
+      "url": "https://financialit.net/news/fundraising-news/ramp-raises-200m-series-e-16b-valuation-companies-all-sizes-choose-ai-powered"
     },
     {
-      "date": "May 18, 2025",
-      "source": "The Block",
-      "title": "Blum co-founder, ex-Binance exec Vladimir Smerkis arrested in Moscow on fraud charges",
-      "url": "https://www.tradingview.com/news/the_block:46087b9d8094b:0-blum-co-founder-ex-binance-exec-vladimir-smerkis-arrested-in-moscow-on-fraud-charges/"
+      "date": "Jun 16, 2025",
+      "source": "Crunchbase News",
+      "title": "Meet PostHog, A Startup That Just Raised A $70M Series D Led By Stripe From A Single Tweet",
+      "url": "https://news.crunchbase.com/ai/startup-posthog-tweet-funding-round-stripe/"
     }
   ],
-  "founder_info": {},
-  "news_summary": "BuildingandInteriors interacted with Blum leadership during interzum 2025. Maarten de Vries, Regional Director - Asia Pacific, and Nadeem Patni, Managing Director, Blum India, shared insights on Blum's latest innovations and market outlook in conversation. Blum's presence at interzum 2025 reflects its ongoing commitment to delivering innovative, sustainable, and value-driven solutions. Plum is proud to announce that it has been named a winner of the Gold Technology Industry Disruptor at the 5th Annual 2025 Globee® Awards for Disruptors. Plum stood out among global innovators for redefining what it means to understand and nurture talent in the modern workforce. Built to transcend traditional pre-hire assessments, Plum equips organizations to prioritize durable soft skills. With insights grounded in I/O psychology and advanced behavioral data, Plum helps businesses unlock the full potential of their talent pools. The 2025 winners represent the spirit of disruption that’s shaping the future of business. “These innovators are not just responding to change—they are creating it,” said San Madan, President of the Globee® Awards. See the complete list of 2025 winners here: https://globeeawards.com/disruptor/winners. Plum is an award-winning talent assessment company. The company focuses on the core competencies that matter. Plum's award programs include the Globee Awards for Innovation, Cybersecurity and Women in Business. To learn more about Plum, visit: http://www.plum.io. Vladimir Smerkis, the co-founder of Blum, has been detained in Russia. He was arrested on accusations of large-scale fraud, according to local media reports. Blum is a popular Telegram Mini App that combines a crypto exchange with point-earning games. The official charges have yet to be revealed. Blum launched its \"Drop Game\" in May, 2024, which lets users farm \"Blum Points\" The project promised an eventual airdrop to turn Blum Points into tokens. Yet the arrest of Smerkis has some users expressing concerns over whether the airdop will actually take place. As of November 2023, Foresight Ventures is a majority investor of The Block. The Block continues to operate independently to deliver objective, impactful, and timely information about the crypto industry. Here are our current financial disclosures. All Rights Reserved. This article is provided for informational purposes only and is not offered or intended to be used as legal, tax, investment, financial, or other advice."
+  "founder_info": {
+    "Eric Glyman": {
+      "wikipedia_summary": "Ramp Business Corporation is a Manhattan-based multinational financial technology company that offers corporate charge cards, expense management, and bill-payment software. The company is headquartered in the Flatiron District of New York City with additional offices in Miami and San Francisco.\nAs of March 2025, Ramp was valued at $13 billion and processing $55 billion in payments annually.",
+      "latest_news": [
+        {
+          "title": "Ramp secures $200 million in funding, valuation soars to $16 billion",
+          "date": "3 hours ago",
+          "desc": "Ramp raises $200 million in Series E, reaching $16 billion valuation. The fintech platform serves 40000-plus businesses with AI-powered financial tools."
+        },
+        {
+          "title": "In just 3 months, Ramp’s valuation jumped to $16B from $13B",
+          "date": "4 hours ago",
+          "desc": "Spend management startup Ramp announced on Tuesday that it raised a $200 million Series E led by its largest investor, Founders Fund."
+        },
+        {
+          "title": "The AlleyWatch Startup Daily Funding Report: 6/16/2025",
+          "date": "1 day ago",
+          "desc": "The latest venture capital, seed, pre-seed, and angel deals for NYC startups for 6/16/2025 featuring funding details for Ramp, Finch Legal, and much more."
+        }
+      ],
+      "education": [
+        "Harvard College BA Economics, East Asian Studies"
+      ],
+      "jobs": [
+        "Ramp Co-Founder, CEO",
+        "Paribus"
+      ]
+    },
+    "Gene Lee": {
+      "wikipedia_summary": "Cantopop (a contraction of \"Cantonese pop music\") is a genre of pop music sung in Cantonese. Cantopop is also used to refer to the cultural context of its production and consumption. The genre began in the 1970s and became associated with Hong Kong popular music from the middle of the decade.",
+      "latest_news": [
+        {
+          "title": "Immigration, fast-food prices, Gene Lee-Portillo’s",
+          "date": "9 hours ago",
+          "desc": "Editor's Note: This podcast was recorded before the Trump administration reversed course on ICE raids. President Trump hit pause on restaurant raids,..."
+        },
+        {
+          "title": "Immigration, fast-food prices, Gene Lee-Portillo’s",
+          "date": "1 hours ago",
+          "desc": "ICE is pausing immigration raids on restaurants, for now. Fast-food prices are slowing, but consumers haven't caught on. And a former Darden CEO has joined..."
+        },
+        {
+          "title": "Former Darden CEO Gene Lee joins Portillo's board",
+          "date": "1 day ago",
+          "desc": "The appointment was supported by activist investor Engaged Capital LLC, which has been seeking board changes at fast-casual Portillo's for months. Lee..."
+        }
+      ],
+      "education": [],
+      "jobs": [
+        "Playstation Network",
+        "Intuit Mailchimp Chief Experience Officer (CXO)"
+      ]
+    },
+    "Karim Atiyeh": {
+      "wikipedia_summary": "Ramp Business Corporation is a Manhattan-based multinational financial technology company that offers corporate charge cards, expense management, and bill-payment software. The company is headquartered in the Flatiron District of New York City with additional offices in Miami and San Francisco.\nAs of March 2025, Ramp was valued at $13 billion and processing $55 billion in payments annually.",
+      "latest_news": [
+        {
+          "title": "The AlleyWatch Startup Daily Funding Report: 6/16/2025",
+          "date": "1 day ago",
+          "desc": "The latest venture capital, seed, pre-seed, and angel deals for NYC startups for 6/16/2025 featuring funding details for Ramp, Finch Legal, and much more."
+        },
+        {
+          "title": "Granola: $43 Million Series B Raised For AI-Based Notepad",
+          "date": "1 month ago",
+          "desc": "Granola, an AI-based notepad that combines your typed notes with AI transcriptions, launched Granola 2.0. The launch also coincided with the announcement..."
+        },
+        {
+          "title": "Granola Raises $43M in Series B Funding",
+          "date": "1 month ago",
+          "desc": "Granola, a London, UK-based company providing an AI-powered notepad that combines typed notes with AI transcriptions, raised $43M in Series B funding."
+        }
+      ],
+      "education": [],
+      "jobs": [
+        "Ramp Co-Founder, CTO",
+        "Paribus"
+      ]
+    }
+  },
+  "news_summary": "Ramp was valued at US$16 billion in its latest funding round. It offers digital and artificial intelligence-based services. The round also saw participation from Thrive Capital, D1 Capital Partners, General Catalyst and GIC. After a years-long funding slump, fintech is attracting interest from investors. Ramp enables tens of billions in purchases annually and serves over 40,000 customers. Its customers include e-commerce platform Shopify, commercial real estate services and investment firm CBRE. The latest round brings Ramp’s total equity financing to US$1.4 billion. Ramp has saved customers $10 billion and 27.5 million hours. The company currently powers over $80 billion in annualized purchase volume across card transactions and bill payments. For the fifth time, a Ramp funding round was led by Founders Fund – the company's first and largest investor. Ramp's product line includes corporate cards and expense management, bill payments, procurement, travel booking, and treasury. Half of Ramp customers use two or more products across its platform. rves more than 40,000 companies, including CBRE, Shopify, Anduril, Notion, Cursor, Vercel, Barry's and MAGNA-TILES. Ramp is your net for catching hours and dollars, it's 'quiet efficiency' The less you have to think about it, the better we're doing our job. A ramp is quite literally a simple machine; like the lever or pulley, it helps you do more work with less force. Ramp has doubled the percent of employee expense reports fully completed and coded without humans needing to lift a finger. Book a hotel and our AI will automatically rebook it if the price drops. We launched 300+ features and made it easier to contact Ramp; still, customers contacted us 34% less often. 40,000 businesses across every sector are choosing Ramp to reclaim their time and money. Construction One reduced their AP team's time spent on monthly close by 75%, saving them 360 hours. Poshmark hit their free cash flow goals 5 months ahead of schedule by redirecting their team's energy toward strategic projects. In 2025 alone, we've shipped 270 features. All were quietly built with the help of AI. It works, you don't notice it. And that's the way we like it. We spend over 50% of our payroll on research and development. It's also why we have more IOI and IMO medalists on our team than most countries. Ramp isn't 'with the help of AI', it's 'done for you and we don't mention it' AI. PostHog, which aims to help developers build “successful products,” quietly announced it had raised $70 million in a Series D funding round led by digital payments giant Stripe. PostHog raised $107 million in a Series D round. The company's new valuation is roughly double its valuation at the time of its $15 million Series B in 2021. Stripe co-founder and CEO Patrick Collison tweeted about PostHog’s site “being cool” PostHog has raised $9 million in its first two rounds of funding. The company is working on a new version of its software called PostHog 2.0. The software is designed to make it easier for developers to build data-driven apps. It is expected to be available by the end of the year. Hawkins and Glaser started working on PostHog during Y Combinator’s Winter 2020 batch. The company focused on just open source software (vs. revenue) for the first year and a half. The full-stack approach highlights the strength of their approach, Hawkins says. PostHog is using artificial intelligence to help teams better understand and work with customers. Its Max AI platform is generally available as an open beta. Users include Y Combinator, 1Password, Mistrial AI, Airbus and Eleven Labs. PostHog has “multiple $10s of millions of ARR and 3x year-over-year growth,” Hawkins says. Since its 2010 inception, Stripe has invested in dozens of companies, per Crunchbase data. In February, it announced a tender offer in which investors would buy shares from past and present employees at a valuation of $91.5 billion. It has also acquired at least 17 companies, according to Crunchbase."
 }
