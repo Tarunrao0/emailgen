@@ -157,7 +157,7 @@ def main():
         company_data = fetch_crunchbase_data(target_url)
 
         # Save to JSON
-        with open("company_data.json", "w", encoding="utf-8") as f:
+        with open("data/company_data.json", "w", encoding="utf-8") as f:
             json.dump(company_data, f, indent=2, ensure_ascii=False)
 
         print(f"✅ Data saved to company_data.json with name: {company_data.get('company_name')}")

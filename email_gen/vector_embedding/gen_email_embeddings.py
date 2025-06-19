@@ -3,7 +3,7 @@ import json
 
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
-with open("emails.json", "r", encoding="utf-8") as f:
+with open("data/emails.json", "r", encoding="utf-8") as f:
     emails = json.load(f)
 
 email_embeddings = []
@@ -16,5 +16,5 @@ for idx, entry in enumerate(emails):
         "embedding": vector.tolist()
     })
 
-with open("email_embeddings.json", "w") as f:
+with open("data/email_embeddings.json", "w") as f:
     json.dump(email_embeddings, f, indent=2)
