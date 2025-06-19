@@ -13,8 +13,8 @@ from email_gen.pipeline import generate_email
 # ========== CONFIG ==========
 
 CSV_FILE = "email_log.csv"
-JSON_FILE = "company_data.json"
-EMBEDDINGS_PATH = "email_embeddings.json"
+JSON_FILE = "data/company_data.json"
+EMBEDDINGS_PATH = "data/email_embeddings.json"
 
 # ========== FASTAPI APP ==========
 

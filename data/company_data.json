@@ -1,10 +1,37 @@
 {
-  "company_name": "bloomsburg-medical-supply",
-  "description": null,
-  "company_overview": null,
-  "headquarters_location": null,
-  "founder_names": [],
-  "industry_categories": [],
-  "news": [],
-  "website_summary": "No content could be scraped from the website."
+  "company_name": "nvidia",
+  "description": "NVIDIA is a computing platform company operating at the intersection of graphics, HPC, and AI.",
+  "company_overview": "NVIDIA is a computing platform company, innovating at the intersection of graphics, HPC, and AI. The company specializes in the manufacture of graphics-processor technologies for workstations, desktop computers, and mobile devices. The company is a major supplier of integrated circuits used for personal computer motherboard chipsets, graphics processing units (GPUs), and game consoles.",
+  "headquarters_location": "California, United States, North America",
+  "founder_names": [
+    "Chris Malachowsky",
+    "Curtis Priem"
+  ],
+  "industry_categories": [
+    "Artificial Intelligence (AI)",
+    "Machine Learning",
+    "Software"
+  ],
+  "news": [
+    {
+      "date": "Jun 18, 2025",
+      "source": "Hedgeweek",
+      "title": "Captain Global unloads Nvidia after blockbuster gains",
+      "url": "https://www.hedgeweek.com/captain-global-unloads-nvidia-after-blockbuster-gains/"
+    },
+    {
+      "date": "Jun 17, 2025",
+      "source": "Business Wire India",
+      "title": "Prodapt Announces Agentic Solutions for Autonomous Operations Powered by NVIDIA AI Platform",
+      "url": "https://www.businesswireindia.com/prodapt-announces-agentic-solutions-for-autonomous-operations-powered-by-nvidia-ai-platform-95263.html"
+    },
+    {
+      "date": "Jun 17, 2025",
+      "source": "TechJuice",
+      "title": "AI Agents Playing Video Games Will Transform Future Robots",
+      "url": "https://www.techjuice.pk/ai-agents-playing-video-games-will-transform-future-robots/"
+    }
+  ],
+  "news_summary": "Prodapt has announced Agentic Solutions for Autonomous Operations, powered by NVIDIA's AI platform, marking a significant partnership between the two companies. This development is part of a larger trend of AI advancements, as seen in Google DeepMind's introduction of Scalable Instructable Multiworld Agents (SIMA), which can master multiple 3D game worlds using natural-language instructions. The skills learned by SIMA can be transferred to unfamiliar environments, and similar AI agents playing video games are expected to transform future robots, enabling them to learn manipulation and navigation skills in simulated environments before being deployed to perform real-world tasks. This progress signals movement toward Artificial General Intelligence (AGI) and has implications for robotics, industrial automation, and consumer AI, with companies like NVIDIA, Meta, and Figure expanding simulation platforms and building humanoid robots accelerated by video-game-trained models. Furthermore, Prodapt's Agentic Solutions aim to drive autonomous operations, showcasing the company's strategic direction as an AI-first strategic technology partner for telecom and tech enterprises, while also highlighting the growing importance of AI agents in transforming industries and workplaces.",
+  "website_summary": "* NVIDIA is a company focused on AI, computing, and graphics technologies.\n* Products and services offered:\n  * Cloud Services: DGX Cloud, NeMo, Omniverse Cloud, NVIDIA NGC\n  * Data Center: DGX Platform, Grace CPU, HGX Platform, IGX Platform, MGX Platform, OVX Systems\n  * Embedded Systems: Jetson, DRIVE AGX, Clara AGX\n  * Gaming and Creating: GeForce Graphics Cards, Laptops, G-SYNC Monitors, DLSS, RTX\n  * Graphics Cards and GPUs: Blackwell Architecture, Hopper Architecture, Ada Lovelace Architecture, GeForce, NVIDIA RTX PRO\n  * Networking: DPUs and SuperNICs, Ethernet, InfiniBand, Networking Software\n  * Professional Workstations: DGX Spark, NVIDIA RTX PRO AI Workstations, NVIDIA RTX PRO Desktops, NVIDIA RTX PRO Laptops\n  * Software: Agentic AI - AgentIQ, AI Blueprints\n* Key industries or use cases served:\n  * Life sciences research and discovery (BioNeMo)\n  * Autonomous vehicles (DRIVE AGX)\n  * Medical devices and imaging (Clara AGX)\n  * Gaming\n  * Professional AI and visual computing\n* Major platforms or technologies mentioned:\n  * AI and accelerated computing\n  * Cloud computing (DGX Cloud, Omniverse Cloud)\n  * Data center infrastructure (DGX Platform, HGX Platform, OVX Systems)\n  * Graphics processing units (GPUs) and graphics cards (GeForce, NVIDIA RTX PRO)"
 }

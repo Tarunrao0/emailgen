@@ -68,7 +68,7 @@ def update_json_with_summaries(data: dict) -> dict:
     return data
 
 if __name__ == "__main__":
-    json_path = "company_data.json"
+    json_path = "data/company_data.json"
 
     try:
         with open(json_path, 'r', encoding='utf-8') as f:
