@@ -9,6 +9,7 @@ import uvicorn
 # Your combined pipeline
 from scrapers.pipeline import scrape_company_info
 from email_gen.pipeline import generate_email
+from email_gen.linkedin_message_gen import generate_linkedin_message
 
 # ========== CONFIG ==========
 
@@ -48,13 +49,30 @@ def scrape_and_generate(request: CompanyRequest):
     # 1. Run full data scraping pipeline (Crunchbase + founders + news + website summary)
     scrape_company_info(request.company_name, request.homepage_url)
 
+    # 1.5. Ensure company_name is present in the JSON
+    with open(JSON_FILE, "r+", encoding="utf-8") as f:
+        data = json.load(f)
+        if "company_name" not in data or not data["company_name"]:
+            data["company_name"] = request.company_name
+            f.seek(0)
+            json.dump(data, f, indent=2, ensure_ascii=False)
+            f.truncate()
+
     # 2. Generate email using updated company_data.json
     email = generate_email(JSON_FILE, EMBEDDINGS_PATH)
     append_to_csv(email)
     latest_email = email
 
+    # 3. Generate LinkedIn message using updated company_data.json
+    linkedin_message = generate_linkedin_message(JSON_FILE)
+
     print(f"✅ API request completed in {time.time() - start:.2f}s")
-    return JSONResponse(content=email)
+    return JSONResponse(content={
+        "company": email["company"],
+        "subject": email["subject"],
+        "email": email["email"],
+        "linkedin_message": linkedin_message
+    })
 
 @app.get("/email")
 def get_latest_email():
