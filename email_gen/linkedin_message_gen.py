@@ -30,8 +30,9 @@ Linkedin Message Requirements:
     - NO greeting like 'Dear' or 'Hi Dr. ___'
     - NO long intro
     - NO sign-off or full name
+    - DO NOT add any conversational filler or preambles like "Here is the LinkedIn message:". Output only the message itself.
     - Reference a specific project, news, or achievement from their background.
-    - Never use: impressed, fascinated, admire, excited, appreciate (use "noted" instead)
+    - Never use: impressed, fascinated, admire, excited, appreciate 
     - Never mention: company culture, testimonials, diversity status
     - Keep sentences concise (readable in one breath)
     - LinkedIn has a short word limit — keep it under 60 words.
@@ -65,12 +66,20 @@ def extract_company_info_for_linkedin(data: dict) -> str:
 
     return content.strip()
 
-def generate_linkedin_message(company_data_path: str) -> str:
+def generate_linkedin_message(
+    company_data_path: str,
+    tone: str = None,
+    focus: str = None,
+    additional_context: str = None
+) -> str:
     """
     Generates a personalized LinkedIn message based on company data.
 
     Args:
         company_data_path (str): The path to the company_data.json file.
+        tone (str): The desired tone for the LinkedIn message.
+        focus (str): The focus of the LinkedIn message.
+        additional_context (str): Additional context to include in the LinkedIn message.
 
     Returns:
         str: The generated LinkedIn message.
@@ -88,11 +97,22 @@ def generate_linkedin_message(company_data_path: str) -> str:
     company_info = extract_company_info_for_linkedin(company_data)
     prompt_template = get_linkedin_prompt_template()
 
+    # Add customization to the prompt
+    customization_prompt = f"""
+COMPANY TO TARGET: {company_name}
+
+COMPANY INFORMATION:
+{company_info}
+"""
+    if tone:
+        customization_prompt += f"\nTONE: Must be {tone}"
+    if focus:
+        customization_prompt += f"\nFOCUS: The message focus should be on {focus}"
+    if additional_context:
+        customization_prompt += f"\nADDITIONAL CONTEXT: Incorporate this key point: {additional_context}"
+
     # Format the final prompt
-    final_prompt = prompt_template.format(
-        company_name=company_name,
-        company_info=company_info
-    )
+    final_prompt = prompt_template + "\n" + customization_prompt
 
     try:
         response = client.chat.completions.create(

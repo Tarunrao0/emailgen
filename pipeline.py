@@ -3,7 +3,8 @@ import csv
 import json
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+from typing import Optional
 import uvicorn
 
 # Your combined pipeline
@@ -40,6 +41,9 @@ def append_to_csv(entry: dict):
 class CompanyRequest(BaseModel):
     company_name: str
     homepage_url: str
+    tone: Optional[str] = Field(None, description="Tone of the message (e.g., Professional, Friendly)")
+    focus: Optional[str] = Field(None, description="Focus of the message (e.g., Partnership, Collaboration)")
+    additional_context: Optional[str] = Field(None, description="Any extra context to include")
 
 @app.post("/scrape")
 def scrape_and_generate(request: CompanyRequest):
@@ -59,12 +63,23 @@ def scrape_and_generate(request: CompanyRequest):
             f.truncate()
 
     # 2. Generate email using updated company_data.json
-    email = generate_email(JSON_FILE, EMBEDDINGS_PATH)
+    email = generate_email(
+        JSON_FILE,
+        EMBEDDINGS_PATH,
+        tone=request.tone,
+        focus=request.focus,
+        additional_context=request.additional_context
+    )
     append_to_csv(email)
     latest_email = email
 
     # 3. Generate LinkedIn message using updated company_data.json
-    linkedin_message = generate_linkedin_message(JSON_FILE)
+    linkedin_message = generate_linkedin_message(
+        JSON_FILE,
+        tone=request.tone,
+        focus=request.focus,
+        additional_context=request.additional_context
+    )
 
     print(f"✅ API request completed in {time.time() - start:.2f}s")
     return JSONResponse(content={
@@ -81,4 +96,4 @@ def get_latest_email():
 # ========== MAIN RUNNER ==========
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    uvicorn.run(app, host="127.0.0.1", port=8001)
