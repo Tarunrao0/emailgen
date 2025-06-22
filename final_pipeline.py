@@ -7,8 +7,8 @@ from pydantic import BaseModel
 import uvicorn
 
 # Your combined pipeline
-from scrapers.pipeline import scrape_company_info
-from email_gen.pipeline import generate_email
+from scrapers.scraper_pipeline import scrape_company_info
+from email_gen.emailgen_pipeline import generate_email
 
 # ========== CONFIG ==========
 
