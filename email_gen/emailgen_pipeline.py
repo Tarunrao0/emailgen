@@ -13,7 +13,13 @@ if not api_key:
 
 client = Groq(api_key=api_key)
 
-def generate_email(company_data_path: str, embeddings_path: str):
+def generate_email(
+    company_data_path: str,
+    embeddings_path: str,
+    tone: str = None,
+    focus: str = None,
+    additional_context: str = None
+):
     # Load company data
     with open(company_data_path, "r", encoding="utf-8") as f:
         company_data = json.load(f)
@@ -39,6 +45,11 @@ You are given three blocks of text below. Use them to adapt the email as instruc
 ===
 [TASK]
 Adapt the TEMPLATE EMAIL to target the company described in COMPANY NAME and COMPANY INFO.
+
+Incorporate the following guidelines into the adapted email:
+- Tone: {tone or 'As per template'}
+- Focus: {focus or 'As per template'}
+- Additional Context: {additional_context or 'None'}
 
 Rules:
 - DO NOT write a new email.
