@@ -6,6 +6,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from typing import Optional
 import uvicorn
+from utils.linkedin_logger import save_linkedin_message
 
 # Your combined pipeline
 from scrapers.pipeline import scrape_company_info
@@ -80,6 +81,9 @@ def scrape_and_generate(request: CompanyRequest):
         focus=request.focus,
         additional_context=request.additional_context
     )
+
+    # 4. Save Linkedin message
+    save_linkedin_message(request.company_name, linkedin_message)
 
     print(f"✅ API request completed in {time.time() - start:.2f}s")
     return JSONResponse(content={
