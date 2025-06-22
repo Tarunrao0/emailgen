@@ -10,7 +10,7 @@ def extract_company_text(data: dict) -> str:
     news = data.get("news_summary", "")
     industries = ", ".join(data.get("industry_categories", []))
     website = data.get("website_summary", "")
-    
+
     return (
         f"{description}\n\n"
         f"{overview}\n\n"

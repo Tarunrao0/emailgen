@@ -1,11 +1,11 @@
 import time
 import json
 import argparse
+import os
 import concurrent.futures
 
 from scrapers.crunchbase.crunchbase_scrape import fetch_crunchbase_data
-from scrapers.crunchbase.news_scrape import update_json_with_summaries
-
+from scrapers.crunchbase.news_scrape import update_news_summary_for_company_key
 from scrapers.website.website_scraper import (
     scrape_homepage_sections,
     summarize_full_site_with_groq,
@@ -30,29 +30,10 @@ def scrape_crunchbase_info(url: str) -> dict:
     try:
         print("📊 Scraping Crunchbase data...")
         data = fetch_crunchbase_data(url)
-
-        with open("data/company_data.json", "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=2, ensure_ascii=False)
-
-        try:
-            # Modify the file and get back the updated version
-            with open("data/company_data.json", "r", encoding="utf-8") as f:
-                updated_data = json.load(f)
-            updated_data = update_json_with_summaries(updated_data)
-
-            with open("data/company_data.json", "w", encoding="utf-8") as f:
-                json.dump(updated_data, f, indent=2, ensure_ascii=False)
-
-            return updated_data
-
-        except Exception as e:
-            print(f"⚠️ News scraping failed: {str(e)}")
-            return data
-
+        return data
     except Exception as e:
         print(f"❌ Crunchbase scraping failed: {str(e)}")
         return {"crunchbase_error": str(e)}
-
 
 
 def init_groq_client():
@@ -65,7 +46,7 @@ def run_website_summary_from_url(url: str, groq_future=None) -> str:
     try:
         sections = scrape_homepage_sections(url)
         client = groq_future.result() if groq_future else Groq(api_key=load_api_key())
-        summary = summarize_full_site_with_groq(sections)  # No client passed here
+        summary = summarize_full_site_with_groq(sections)
         print("✅ Website summary generated.")
         return summary
     except Exception as e:
@@ -77,7 +58,8 @@ def scrape_company_info(company_name: str, homepage_url: str) -> dict:
     start = time.time()
     print(f"\n🔍 Starting scrape for: {company_name}\n")
 
-    crunchbase_url = f"https://www.crunchbase.com/organization/{company_name.lower().replace(' ', '-')}"
+    company_key = company_name.lower().replace(" ", "-")
+    crunchbase_url = f"https://www.crunchbase.com/organization/{company_key}"
     json_path = "data/company_data.json"
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
@@ -88,16 +70,28 @@ def scrape_company_info(company_name: str, homepage_url: str) -> dict:
         crunchbase_data = future_crunchbase.result()
         website_summary = future_website.result()
 
-    # Merge both results
     if website_summary:
         crunchbase_data["website_summary"] = website_summary
 
-    # Save only once
+    # Load existing data
+    if os.path.exists(json_path):
+        with open(json_path, "r", encoding="utf-8") as f:
+            all_data = json.load(f)
+    else:
+        all_data = {}
+
+    # Insert or replace entry
+    all_data[company_key] = make_serializable(crunchbase_data)
+
+    # ✅ Update news summary for this specific company only
+    all_data = update_news_summary_for_company_key(company_key, all_data)
+
+    # Save back
     with open(json_path, "w", encoding="utf-8") as f:
-        json.dump(make_serializable(crunchbase_data), f, indent=2, ensure_ascii=False)
+        json.dump(all_data, f, indent=2, ensure_ascii=False)
 
     print(f"\n✅ Completed in {time.time() - start:.2f}s\n")
-    return crunchbase_data
+    return all_data[company_key]
 
 
 if __name__ == "__main__":

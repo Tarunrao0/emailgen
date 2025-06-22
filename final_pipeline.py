@@ -66,6 +66,7 @@ def scrape_and_generate(request: CompanyRequest):
     email = generate_email(
         JSON_FILE,
         EMBEDDINGS_PATH,
+        company_name = request.company_name, # this helps do the key value search in the company_data.json file
         tone=request.tone,
         focus=request.focus,
         additional_context=request.additional_context

@@ -56,30 +56,20 @@ News Articles:
 
     return completion.choices[0].message.content.strip()
 
-def update_json_with_summaries(data: dict) -> dict:
-    news_entries = data.get('news', [])
+def update_news_summary_for_company_key(company_key: str, all_data: dict) -> dict:
+    """
+    Updates news_summary for the given company key in the company_data dict.
+    """
+    if company_key not in all_data:
+        print(f"[❌ Error] Company key '{company_key}' not found.")
+        return all_data
+
+    news_entries = all_data[company_key].get("news", [])
     if not news_entries:
-        print('[Info] No news entries found.')
-        return data
+        print(f"[ℹ️] No news entries found for '{company_key}'. Skipping news summary.")
+        return all_data
 
     summary = summarize_articles(news_entries)
-    data['news_summary'] = summary
-    print('[✅ Success] Company news summary added.')
-    return data
-
-if __name__ == "__main__":
-    json_path = "data/company_data.json"
-
-    try:
-        with open(json_path, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-
-        data = update_json_with_summaries(data)
-
-        with open(json_path, 'w', encoding='utf-8') as f:
-            json.dump(data, f, indent=2, ensure_ascii=False)
-
-        print("✅ Updated company_data.json with news_summary.")
-
-    except Exception as e:
-        print(f"❌ Failed to process company_data.json: {e}")
+    all_data[company_key]["news_summary"] = summary
+    print(f"[✅ Success] News summary added for '{company_key}'.")
+    return all_data

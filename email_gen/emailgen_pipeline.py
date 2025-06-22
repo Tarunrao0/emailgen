@@ -16,20 +16,25 @@ client = Groq(api_key=api_key)
 def generate_email(
     company_data_path: str,
     embeddings_path: str,
+    company_name: str,
     tone: str = None,
     focus: str = None,
     additional_context: str = None
 ):
-    # Load company data
-    with open(company_data_path, "r", encoding="utf-8") as f:
-        company_data = json.load(f)
+    company_key = company_name.strip().lower().replace(" ", "-")
 
-    company_name = company_data.get("company_name", "Unknown").strip()
+    # Load JSON dict and extract that company
+    with open(company_data_path, "r", encoding="utf-8") as f:
+        all_data = json.load(f)
+
+    company_data = all_data.get(company_key)
+    if not company_data:
+        raise ValueError(f"❌ Company '{company_name}' not found in {company_data_path}")
+
     source_text = extract_company_text(company_data)
     template = get_template()
     similar_email = retrieve_similar_email(source_text, embeddings_path)
 
-    # Strongly formatted user prompt
     user_prompt = f"""
 You are given three blocks of text below. Use them to adapt the email as instructed.
 
@@ -90,11 +95,9 @@ Rules:
    - “Let’s talk brand strategy and media agility”
    - “Helping brands thrive across traditional and digital platforms”
 
-
 Output only the subject and the email body. No extra content.
 """
 
-    # Generate email
     response = client.chat.completions.create(
         model="llama3-70b-8192",
         messages=[
@@ -107,20 +110,17 @@ Output only the subject and the email body. No extra content.
 
     result = response.choices[0].message.content.strip()
 
-    # Remove any leading "Here is the adapted email:" just in case
+    # Clean output
     if result.lower().startswith("here is the adapted email"):
         result = result.split("\n", 1)[-1].strip()
-
-    # Remove any leftover placeholders
     result = result.replace("[Your Company]", "").replace("  ", " ").strip()
 
-    # Save final output
     with open("data/final_email.txt", "w", encoding="utf-8") as f:
         f.write(result)
 
     print("✅ Generated email saved to final_email.txt")
 
-    # Extract subject line
+    # Parse subject + body
     lines = result.splitlines()
     subject_line = lines[0]
     if subject_line.lower().startswith("subject:"):
@@ -136,4 +136,14 @@ Output only the subject and the email body. No extra content.
     }
 
 if __name__ == "__main__":
-    generate_email("data/company_data.json", "data/email_embeddings.json")
+    result = generate_email(
+        company_data_path="data/company_data.json",
+        embeddings_path="data/email_embeddings.json",
+        company_name="scale-ai",
+        tone="Friendly",
+        focus="Media Strategy",
+        additional_context="You met them at a recent branding event"
+    )
+
+    print(f"Subject: {result['subject']}\n")
+    print(result["email"])
