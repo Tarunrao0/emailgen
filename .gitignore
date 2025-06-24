@@ -6,6 +6,6 @@ __pycache__/
 downloaded_files/
 venv_seleniumbase/
 final_email.txt
-data/*
+generated_data/*
 .venv/*
 email_log.csv
