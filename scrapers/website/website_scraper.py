@@ -4,16 +4,17 @@ from bs4 import BeautifulSoup
 from collections import OrderedDict
 from groq import Groq
 import urllib3
+from dotenv import load_dotenv
 
 # Suppress SSL warnings
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-# Set API key directly
-GROQ_API_KEY = "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"
+# Load environment variables from .env file
+load_dotenv()
 MAX_SECTIONS = 10  # Limit to top 10 sections
 
 def load_api_key():
-    return GROQ_API_KEY
+    return os.getenv("GROQ_API_KEY")
 
 def try_fetch_url(url: str) -> str:
     """

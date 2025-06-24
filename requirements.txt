@@ -1,17 +1,17 @@
 # Web scraping and parsing
-seleniumbase==4.21.3
+seleniumbase
 beautifulsoup4
 html5lib==1.1
 newspaper3k==0.2.8
 GoogleNews==1.6.8
 wikipedia==1.4.0
+yfinance
 
 # Transformers and sentence embeddings
-transformers==4.41.2
 sentence-transformers==2.6.1
-torch>=1.10
-scipy==1.13.0
 numpy==1.26.4
+textblob
+boilerpy3
 
 # FastAPI backend
 fastapi==0.111.0
@@ -20,6 +20,7 @@ pydantic==2.7.1
 
 # Groq API client
 groq
+openai
 
 # Miscellaneous
 requests
