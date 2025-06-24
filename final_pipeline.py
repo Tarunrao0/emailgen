@@ -15,8 +15,8 @@ from email_gen.linkedin_message_gen import generate_linkedin_message
 # ========== CONFIG ==========
 
 CSV_FILE = "email_log.csv"
-JSON_FILE = "data/company_data.json"
-EMBEDDINGS_PATH = "data/email_embeddings.json"
+JSON_FILE = "generated_data/company_data.json"
+EMBEDDINGS_PATH = "generated_data/email_embeddings.json"
 
 # ========== FASTAPI APP ==========
 

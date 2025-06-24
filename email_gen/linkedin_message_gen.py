@@ -32,7 +32,7 @@ Linkedin Message Requirements:
     - NO sign-off or full name
     - DO NOT add any conversational filler or preambles like "Here is the LinkedIn message:". Output only the message itself.
     - Reference a specific project, news, or achievement from their background.
-    - Never use: impressed, fascinated, admire, excited, appreciate 
+    - Never use: impressed, fascinated, admire, excited, appreciate
     - Never mention: company culture, testimonials, diversity status
     - Keep sentences concise (readable in one breath)
     - LinkedIn has a short word limit — keep it under 60 words.
@@ -132,7 +132,7 @@ COMPANY INFORMATION:
 
 if __name__ == "__main__":
     # Example usage:
-    # Assumes 'data/company_data.json' exists from a previous step.
+    # Assumes 'generated_data/company_data.json' exists from a previous step.
     json_path = os.path.join("data", "company_data.json")
 
     # Create a dummy json if it doesn't exist for testing

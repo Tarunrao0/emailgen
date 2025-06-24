@@ -120,7 +120,7 @@ Output only the subject and the email body. No extra content.
     result = result.replace("[Your Company]", "").strip()
 
     os.makedirs("data", exist_ok=True)
-    with open("data/final_email.txt", "w", encoding="utf-8") as f:
+    with open("generated_data/final_email.txt", "w", encoding="utf-8") as f:
         f.write(result)
 
     lines = result.splitlines()
@@ -141,13 +141,13 @@ if __name__ == "__main__":
     parser.add_argument(
         "-d", "--data",
         dest="company_data_path",
-        default="data/company_data.json",
+        default="generated_data/company_data.json",
         help="Path to the scraped JSON file"
     )
     parser.add_argument(
         "-e", "--embeddings",
         dest="embeddings_path",
-        default="data/email_embeddings.json",
+        default="generated_data/email_embeddings.json",
         help="Path to the email embeddings JSON"
     )
     parser.add_argument(

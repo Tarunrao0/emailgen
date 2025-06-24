@@ -70,7 +70,7 @@ def extract_crunchbase_info(html_content, company_name="Unknown"):
         result["industry_categories"] = [
             div.text.strip() for div in soup.select("div.chip-text")
         ]
-            
+
     # News Section
     news_items = []
     news_divs = soup.select("section-card h2.section-title")
@@ -157,7 +157,7 @@ def main():
         company_data = fetch_crunchbase_data(target_url)
 
         # Save to JSON
-        with open("data/company_data.json", "w", encoding="utf-8") as f:
+        with open("generated_data/company_data.json", "w", encoding="utf-8") as f:
             json.dump(company_data, f, indent=2, ensure_ascii=False)
 
         print(f"✅ Data saved to company_data.json with name: {company_data.get('company_name')}")

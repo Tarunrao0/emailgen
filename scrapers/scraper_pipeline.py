@@ -104,7 +104,7 @@ def main():
     blob = scrape_company_info(args.company_name, args.company_url, args.max_news)
 
     # write new JSON format
-    out_path = "data/company_data.json"
+    out_path = "generated_data/company_data.json"
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(blob, f, indent=2, ensure_ascii=False)
 
@@ -114,7 +114,7 @@ def main():
     # generate email
     email = generate_email(
         out_path,
-        "data/email_embeddings.json",
+        "generated_data/email_embeddings.json",
         args.company_name,
         tone=tone,
         focus=focus,
