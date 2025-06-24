@@ -1,3 +1,4 @@
+import os
 import re
 import json
 import warnings
@@ -15,50 +16,63 @@ from textblob import TextBlob
 
 from newspaper import Article
 from boilerpy3 import extractors
-boiler_extractor = extractors.ArticleExtractor()
-
+from dotenv import load_dotenv, find_dotenv
 from openai import OpenAI
 
+# Suppress warnings
 warnings.filterwarnings("ignore", category=GuessedAtParserWarning)
 
-# ─── DeepSeek Configuration ─────────────────────────────────────────────────
-DEEPSEEK_API_KEY = "<DeepSeek API Key>"  # ← fill this in
-client = OpenAI(
-    api_key=DEEPSEEK_API_KEY,
-    base_url="https://api.deepseek.com"
+# ─── Load OpenRouter API key ───────────────────────────────────────────────────
+load_dotenv(find_dotenv())
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+if not OPENROUTER_API_KEY:
+    raise RuntimeError("Please set OPENROUTER_API_KEY in your .env file")
+
+router_client = OpenAI(
+    api_key=OPENROUTER_API_KEY,
+    base_url="https://openrouter.ai/api/v1"
 )
+
+MAX_TOKENS = 1024
+boiler_extractor = extractors.ArticleExtractor()
+
 
 def llm_chat(prompt: str) -> Optional[str]:
     """
-    Send prompt to DeepSeek and return the assistant's reply.
+    Send prompt to OpenRouter (Gemini model) and return the assistant's reply.
     """
     try:
-        resp = client.chat.completions.create(
-            model="deepseek-chat",
+        resp = router_client.chat.completions.create(
+            model="google/gemini-2.5-flash",
             messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user",   "content": prompt}
+                {"role": "system",  "content": "You are a helpful assistant."},
+                {"role": "user",    "content": prompt}
             ],
+            max_tokens=MAX_TOKENS,
+            temperature=0.5,
             stream=False
         )
         return resp.choices[0].message.content.strip()
     except Exception as e:
-        print(f"⚠️ DeepSeek call failed ({e}).")
+        print(f"⚠️ OpenRouter call failed ({e}).")
         return None
 
 
 def tag_sentiment(text: str) -> Dict:
     blob = TextBlob(text)
-    return {"polarity": blob.sentiment.polarity, "subjectivity": blob.sentiment.subjectivity}
+    return {
+        "polarity":     blob.sentiment.polarity,
+        "subjectivity": blob.sentiment.subjectivity
+    }
 
 
 def get_homepage_info(website: str) -> Dict:
     try:
-        res = requests.get(website, timeout=10)
-        res.raise_for_status()
+        r = requests.get(website, timeout=10)
+        r.raise_for_status()
     except:
         return {}
-    soup = BeautifulSoup(res.text, "lxml")
+    soup = BeautifulSoup(r.text, "lxml")
     meta = soup.find("meta", {"name": "description"})
     return {
         "meta_description": meta["content"].strip() if meta and meta.get("content") else None,
@@ -139,31 +153,32 @@ def get_google_news_articles(company: str, query: str, max_items: int = 5) -> Li
         f"q={requests.utils.quote(query)}&hl=en-US&gl=US&ceid=US:en"
     )
     feed = feedparser.parse(rss_url)
-    results = []
+    out = []
     for entry in feed.entries[:max_items]:
         txt = fetch_clean_text(entry.link)
-        results.append({
+        out.append({
             "title":     entry.title,
             "link":      entry.link,
             "published": entry.get("published"),
             "summary":   llm_summarize_article(company, entry.title, txt) if txt else "",
             "sentiment": tag_sentiment(txt)
         })
-    return results
+    return out
 
 
 def filter_recent_articles(arts: List[Dict], days: int = 30) -> List[Dict]:
     cutoff = datetime.now(timezone.utc) - timedelta(days=days)
-    out = []
+    ret = []
     for a in arts:
         try:
             dt = parsedate_to_datetime(a["published"])
-            if dt.tzinfo is None: dt = dt.replace(tzinfo=timezone.utc)
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=timezone.utc)
             if dt >= cutoff:
-                out.append(a)
+                ret.append(a)
         except:
             continue
-    return out
+    return ret
 
 
 def get_stock_info(infobox: Dict) -> Dict:
@@ -195,7 +210,7 @@ def get_realtime_news(company: str) -> List[Dict]:
         r.raise_for_status()
         items = r.json().get("data", [])
     except Exception as e:
-        print("⚠️ Real-time news fetch error:", e)
+        print(f"⚠️ Real-time news fetch error: {e}")
         return []
     return [{
         "title":     it.get("title"),
@@ -206,11 +221,7 @@ def get_realtime_news(company: str) -> List[Dict]:
 
 
 def get_section_news(company: str) -> List[Dict]:
-    token = (
-        "CAQiSkNCQVNNUW9JTDIwdk1EZGpNWFlTQldWdUxVZENHZ0pKVENJT0NBUWFDZ29J"
-        "TDIwdk1ETnliSFFxQ2hJSUwyMHZNRE55YkhRb0FBKi4IACoqCAoiJENCQVNGUW9J"
-        "TDIwdk1EZGpNWFlTQldWdUxVZENHZ0pKVENnQVABUAE"
-    )
+    token = "<YOUR_SECTION_TOKEN>"
     url = "https://real-time-news-data.p.rapidapi.com/topic-news-by-section"
     qs  = {"topic": company, "section": token, "limit": "5", "country": "US", "lang": "en"}
     hdr = {
@@ -222,7 +233,7 @@ def get_section_news(company: str) -> List[Dict]:
         r.raise_for_status()
         data = r.json().get("data", [])
     except Exception as e:
-        print("⚠️ Section news fetch error:", e)
+        print(f"⚠️ Section news fetch error: {e}")
         return []
     return [{
         "title":     it.get("title"),
@@ -237,9 +248,9 @@ def build_full_profile(company: str, website: str, max_news: int = 5) -> Dict:
     wiki_summary  = get_wikipedia_description(company)
     wiki_infobox  = get_wikipedia_infobox(company)
 
-    context  = "\n\n".join(filter(None, [homepage.get("homepage_snippet"), wiki_summary]))
-    keywords = extract_keywords(company, context)[:2]
-    query    = company if not keywords else f"{company} AND ({keywords[0]} OR {keywords[1]})"
+    context       = "\n\n".join(filter(None, [homepage.get("homepage_snippet"), wiki_summary]))
+    keywords      = extract_keywords(company, context)[:2]
+    query         = company if not keywords else f"{company} AND ({keywords[0]} OR {keywords[1]})"
 
     recent_news   = filter_recent_articles(get_google_news_articles(company, query, max_items=max_news))
     realtime_news = get_realtime_news(company)
