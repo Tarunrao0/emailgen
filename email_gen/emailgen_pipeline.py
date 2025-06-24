@@ -1,17 +1,18 @@
+#!/usr/bin/env python3
+import argparse
 import json
 import os
 from dotenv import load_dotenv
 from groq import Groq
-from email_gen.vector_embedding.prompt_template import get_template
 from email_gen.vector_embedding.retrieve_email import extract_company_text, retrieve_similar_email
 
-# Load environment variables
+# ─── Configuration ─────────────────────────────────────────────────────────────
 load_dotenv()
-api_key = os.getenv("GROQ_API_KEY")
-if not api_key:
+API_KEY = os.getenv("GROQ_API_KEY")
+if not API_KEY:
     raise ValueError("❌ Missing GROQ_API_KEY in .env")
 
-client = Groq(api_key=api_key)
+client = Groq(api_key=API_KEY)
 
 def generate_email(
     company_data_path: str,
@@ -20,19 +21,22 @@ def generate_email(
     tone: str = None,
     focus: str = None,
     additional_context: str = None
-):
-    company_key = company_name.strip().lower().replace(" ", "-")
+) -> dict:
+    # derive slug for nested JSON lookup
+    slug = company_name.strip().lower().replace(" ", "-")
 
-    # Load JSON dict and extract that company
     with open(company_data_path, "r", encoding="utf-8") as f:
-        all_data = json.load(f)
+        raw = json.load(f)
 
-    company_data = all_data.get(company_key)
-    if not company_data:
+    # support both { slug: {...} } and single-object formats
+    if isinstance(raw, dict) and slug in raw:
+        company_data = raw[slug]
+    elif isinstance(raw, dict) and "company_name" in raw:
+        company_data = raw
+    else:
         raise ValueError(f"❌ Company '{company_name}' not found in {company_data_path}")
 
-    source_text = extract_company_text(company_data)
-    template = get_template()
+    source_text   = extract_company_text(company_data)
     similar_email = retrieve_similar_email(source_text, embeddings_path)
 
     user_prompt = f"""
@@ -77,7 +81,7 @@ Output format:
 Subject: [your subject line]
 
 [email body only, no header or explanation]
-"""
+""".strip()
 
     system_prompt = """You are an expert email writer. Adapt the provided TEMPLATE EMAIL using the COMPANY INFO and COMPANY NAME.
 
@@ -96,54 +100,87 @@ Rules:
    - “Helping brands thrive across traditional and digital platforms”
 
 Output only the subject and the email body. No extra content.
-"""
+""".strip()
 
+    # call the LLM
     response = client.chat.completions.create(
         model="llama3-70b-8192",
         messages=[
-            {"role": "system", "content": system_prompt.strip()},
-            {"role": "user", "content": user_prompt.strip()}
+            {"role": "system", "content": system_prompt},
+            {"role": "user",   "content": user_prompt}
         ],
         temperature=0.2,
         top_p=0.85
     )
-
     result = response.choices[0].message.content.strip()
 
-    # Clean output
+    # cleanup
     if result.lower().startswith("here is the adapted email"):
-        result = result.split("\n", 1)[-1].strip()
-    result = result.replace("[Your Company]", "").replace("  ", " ").strip()
+        result = result.split("\n", 1)[1].strip()
+    result = result.replace("[Your Company]", "").strip()
 
+    os.makedirs("data", exist_ok=True)
     with open("data/final_email.txt", "w", encoding="utf-8") as f:
         f.write(result)
 
-    print("✅ Generated email saved to final_email.txt")
-
-    # Parse subject + body
     lines = result.splitlines()
-    subject_line = lines[0]
-    if subject_line.lower().startswith("subject:"):
-        subject_line = subject_line.split(":", 1)[1].strip()
-        email_body = "\n".join(lines[1:]).strip()
+    subject = ""
+    body    = ""
+    if lines and lines[0].lower().startswith("subject:"):
+        subject = lines[0].split(":",1)[1].strip()
+        body    = "\n".join(lines[1:]).strip()
     else:
-        email_body = "\n".join(lines).strip()
+        body = result
 
-    return {
-        "company": company_name,
-        "subject": subject_line,
-        "email": email_body
-    }
+    return {"company": company_name, "subject": subject, "email": body}
 
 if __name__ == "__main__":
-    result = generate_email(
-        company_data_path="data/company_data.json",
-        embeddings_path="data/email_embeddings.json",
-        company_name="scale-ai",
-        tone="Friendly",
-        focus="Media Strategy",
-        additional_context="You met them at a recent branding event"
+    parser = argparse.ArgumentParser(
+        description="Adapt a template email using scraped company_data.json"
+    )
+    parser.add_argument(
+        "-d", "--data",
+        dest="company_data_path",
+        default="data/company_data.json",
+        help="Path to the scraped JSON file"
+    )
+    parser.add_argument(
+        "-e", "--embeddings",
+        dest="embeddings_path",
+        default="data/email_embeddings.json",
+        help="Path to the email embeddings JSON"
+    )
+    parser.add_argument(
+        "-c", "--company",
+        dest="company_name",
+        default=None,
+        help="Company name (slug) to target; falls back to top-level company_name in JSON"
+    )
+    parser.add_argument("--tone", default=None, help="Desired tone for the email")
+    parser.add_argument("--focus", default=None, help="Desired focus for the email")
+    parser.add_argument(
+        "--additional_context",
+        default=None,
+        help="Additional context to weave into the email"
     )
 
-    print(f"Subject: {result['subject']}\n")
-    print(result["email"])
+    args = parser.parse_args()
+
+    if not args.company_name:
+        with open(args.company_data_path, "r", encoding="utf-8") as f:
+            top = json.load(f)
+        if isinstance(top, dict) and "company_name" in top:
+            args.company_name = top["company_name"]
+        else:
+            parser.error("No --company provided and JSON lacks top-level 'company_name'")
+
+    result = generate_email(
+        company_data_path=args.company_data_path,
+        embeddings_path=args.embeddings_path,
+        company_name=args.company_name,
+        tone=args.tone,
+        focus=args.focus,
+        additional_context=args.additional_context
+    )
+
+    print(json.dumps(result, indent=2, ensure_ascii=False))
